@@ -23,25 +23,20 @@
 
 
 <script>
-window.addEventListener('load', function() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("./js/sw.js")
-      .then(function(registration) {
-        return registration.pushManager.getSubscription().then(function(subscription) {
-          if (subscription) {
-            return subscription
-          }
-          return registration.pushManager.subscribe({
-            userVisibleOnly: true
-          })
-        })
-      }).then(function(subscription) {
-        console.log("pushManager endpoint:", subscription.endpoint) 
-      }).catch(function(error) {
-        console.warn("serviceWorker error:", error)
-      })
+var registerSubscription = function(subscription){
+  if(subscription){
+    $.post("/api/register", {endpoint: subscription.endpoint})
   }
+};
+ 
+navigator.serviceWorker.ready.then(function(sw){
+  sw.pushManager.getSubscription().then(function(subscription){
+    if(subscription === null){
+      sw.pushManager.subscribe({userVisibleOnly: true}).then(registerSubscription);
+    }
+  });
 });
+navigator.serviceWorker.register("/sw.js").then();
 </script>
 
 <div id="wrapper">
