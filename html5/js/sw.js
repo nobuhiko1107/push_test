@@ -2,7 +2,7 @@ self.addEventListener("push", function(event){
   event.waitUntil().then(function(res){
     self.registration.showNotification("プッシュタイトル", {
       body: "プッシュ通知",
-      icon: "/path/to.png",
+      icon: "./icon.png",
       tag: "tag"
     });
   });
